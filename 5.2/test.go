@@ -2,6 +2,15 @@ package main
 
 import "fmt"
 
+func test1(x [2]int) {
+	fmt.Printf("x :%p, %v\n", &x, x)
+}
+
+func test2(x *[2]int) {
+	fmt.Printf("x: %p, %v\n", x, *x)
+	x[1] += 100
+}
+
 func main() {
 	{
 		var a [4]int
@@ -75,9 +84,22 @@ func main() {
 		println(&a, &a[0], &a[1])
 	}
 	{
-		a := [111]int{1, 2}
+		a := [...]int{1, 2}
 		p := &a
 		p[1] += 10
-
+		println(p[1])
+	}
+	{ //与C数组变量隐式作为指针使用不同，Go数组是值类型，赋值和传参操作都会复制整个数组数据
+		a := [2]int{10, 20}
+		var b [2]int
+		b = a
+		fmt.Printf("a :%p, %v\n", &a, a)
+		fmt.Printf("b :%p, %v\n", &b, b)
+		test1(a)
+	}
+	{ //可以改用数组或切片，避免数据复制
+		a := [2]int{10, 20}
+		test2(&a)
+		fmt.Printf("a: %p, %v\n", &a, a)
 	}
 }
